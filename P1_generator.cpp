@@ -7,7 +7,7 @@
 using namespace std;
 
 void file_write(const vector<pair<string,unsigned int>>& content){
-    ofstream fileout("C:\\Codes\\C++\\SImsCoding\\scores.txt");
+    ofstream fileout("scores.txt");
     for(const auto& person : content){
         fileout << person.first << '\n';
         fileout << person.second << '\n';

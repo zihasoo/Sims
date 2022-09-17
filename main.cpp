@@ -1,32 +1,23 @@
-#include <iostream>
 #include <fstream>
-#include <string>
+#include <iostream>
 
 using namespace std;
 
-void getHighScore(string &name, int &score)
-{
-    ifstream file("scores.txt");
-
-    string highestName;
-    int highestScore=0;
-    string na;
-    int scc;
-    while(file>>na>>scc){
-        if(scc>highestScore){
-            highestScore=scc;
-            highestName=na;
+void find_highest_score(string& best_player, int& best_score) {
+    ifstream fin("scores.txt");
+    best_score = 0;
+    pair<string, int> player;
+    while (fin >> player.first >> player.second){
+        if(player.second > best_score){
+            best_player = player.first;
+            best_score = player.second;
         }
     }
-    name=highestName;
-    score=highestScore;
 }
 
-int main()
-{
-    string name;
+int main(){
+    string player;
     int score;
-    getHighScore(name, score);
-    cout<<name<<"\n"<<score;
-
+    find_highest_score(player,score);
+    cout << player << ' ' << score;
 }
