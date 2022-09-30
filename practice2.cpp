@@ -1,38 +1,44 @@
 #include<iostream>
-#include<cmath>
 
 using namespace std;
 
-static const long double pi = acos(-1);
-
-class Circle {
-    int radius;
+class HotDogStand{
+    int ID;
+    unsigned short numSold = 0;
+    static unsigned totalSold;
 public:
-    void set_radius(int new_radius){
-        radius = new_radius;
+    HotDogStand(): numSold(0){}
+    HotDogStand(int standID, unsigned short soldCount) : ID(standID), numSold(soldCount) {
+        totalSold += numSold;
     }
-    int get_radius(){
-        return radius;
+    int getID(){return ID;}
+    void setID(int newID){ID = newID;}
+    void justSold(){
+        numSold++;
+        totalSold++;
     }
-    long double get_area(){
-        return pi*radius*radius;
+    unsigned short getNumSold(){
+        return numSold;
     }
-    int get_diameter(){
-        return radius*2;
-    }
-    long double get_circumference(){
-        return pi*get_diameter();
+    static unsigned getTotalSold(){
+        return totalSold;
     }
 };
 
+unsigned HotDogStand::totalSold = 0;
+
 int main() {
-    Circle circle;
-    circle.set_radius(5);
-    cout.precision(10);
-    cout << fixed;
-    cout << circle.get_radius() << '\n';
-    cout << circle.get_area() << '\n';
-    cout << circle.get_diameter() << '\n';
-    cout << circle.get_circumference() << '\n';
+    HotDogStand std1(1,3);
+    HotDogStand std2(2,10);
+    HotDogStand std3(3,5);
+    std1.justSold();
+    std3.justSold();
+
+    cout << "id: " << std1.getID() << ", sold: " << std1.getNumSold() << '\n';
+    cout << "id: " << std2.getID() << ", sold: " << std2.getNumSold() << '\n';
+    cout << "id: " << std3.getID() << ", sold: " << std3.getNumSold() << '\n';
+
+    cout << "total: " << HotDogStand::getTotalSold();
+
     return 0;
 }

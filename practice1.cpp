@@ -1,35 +1,34 @@
-#include <fstream>
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
-void getHighScores(vector<string>& players, vector<int>& scores) {
-    ifstream fin("scores.txt");
-    pair<string, int> player;
-    while (fin >> player.first >> player.second){
-        players.push_back(player.first);
-        scores.push_back(player.second);
+class Rectangle{
+    double width, height;
+public:
+    Rectangle(double width, double height) : width(width), height(height) {}
+    Rectangle() : width(5), height(5) {}
+
+    void setWidth(double newWidth){
+        width = newWidth;
     }
-    for (int i = 0; i < scores.size()-1; ++i) {
-        int maxidx = i;
-        for (int j = i+1; j < scores.size(); ++j) {
-            if(scores[j] > scores[maxidx]){
-                maxidx = j;
-            }
-        }
-        swap(scores[i],scores[maxidx]);
-        swap(players[i],players[maxidx]);
+    void setHeight(double newHeight){
+        height = newHeight;
     }
-}
+    double getArea() const{
+        return width * height;
+    }
+    void display(){
+        cout << "width: " << width << ", height: " << height << ", area: " << getArea() << '\n';
+    }
+};
 
 int main(){
-    vector<string> players;
-    vector<int> scores;
-
-    getHighScores(players,scores);
-    for (int i = 0; i < 5; ++i) {
-        cout << players[i] << ' '  << scores[i] << '\n';
-    }
+    Rectangle rect1, rect2(10,10);
+    rect1.setHeight(8);
+    rect1.setWidth(8);
+    rect2.setHeight(16);
+    rect2.setWidth(16);
+    rect1.display();
+    rect2.display();
     return 0;
 }
