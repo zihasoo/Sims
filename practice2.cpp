@@ -1,38 +1,32 @@
 #include<iostream>
-#include<cmath>
 
 using namespace std;
 
-static const long double pi = acos(-1);
-
-class Circle {
-    int radius;
+class Vector2D {
+    int x, y;
 public:
-    void set_radius(int new_radius){
-        radius = new_radius;
+    Vector2D(int x, int y) : x(x), y(y) {}
+
+    int getX() { return x; }
+
+    int getY() { return y; }
+
+    void setX(int newX) {
+        x = newX;
     }
-    int get_radius(){
-        return radius;
+
+    void setY(int newY) {
+        y = newY;
     }
-    long double get_area(){
-        return pi*radius*radius;
-    }
-    int get_diameter(){
-        return radius*2;
-    }
-    long double get_circumference(){
-        return pi*get_diameter();
+
+    int operator*(const Vector2D& other) const{
+        return x * other.x + y * other.y;
     }
 };
 
 int main() {
-    Circle circle;
-    circle.set_radius(5);
-    cout.precision(10);
-    cout << fixed;
-    cout << circle.get_radius() << '\n';
-    cout << circle.get_area() << '\n';
-    cout << circle.get_diameter() << '\n';
-    cout << circle.get_circumference() << '\n';
+    Vector2D A(2,2);
+    Vector2D B(3,3);
+    cout << A*B;
     return 0;
 }
