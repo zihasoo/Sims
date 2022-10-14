@@ -1,242 +1,149 @@
 #include <iostream>
+#include <map>
 
+#define FastIO                        \
+    ios_base::sync_with_stdio(false); \
+    cin.tie(NULL);                    \
+    cout.tie(NULL);
 using namespace std;
 
-#include <iostream>
-#include <cstdlib>
-#include <cmath>
-using namespace std;
-
-//Class for amounts of money in U.S. currency.
-class Money
-{
-public:
-    Money( );
-    Money(double amount);
-    Money(int theDollars, int theCents);
-    Money(int theDollars);
-    double getAmount( ) const;
-    int getDollars( ) const;
-    int getCents( ) const;
-    friend const Money operator +(const Money& amount1, const Money& amount2);
-    friend const Money operator -(const Money& amount1, const Money& amount2);
-    friend bool operator ==(const Money& amount1, const Money& amount2);
-    friend const Money operator -(const Money& amount);
-    friend ostream& operator <<(ostream& outputStream, const Money& amount);
-    friend istream& operator >>(istream& inputStream, Money& amount);
-
-    Money percent(int percentFigure) const{
-        double perc = static_cast<double>(percentFigure)/100;
-        return {static_cast<int>(dollars * perc), static_cast<int>(cents * perc)};
-    }
-
-    friend ostream & operator <<(ostream& cout, const Money& amount);
-    friend istream & operator >>(istream& in, Money& amount);
-
-    bool operator<(const Money& other) const {
-        if(dollars == other.dollars){
-            return cents < other.getCents();
-        }
-        return dollars < other.dollars;
-    }
-    bool operator>(const Money& other) const {
-        if(dollars == other.dollars){
-            return cents > other.getCents();
-        }
-        return dollars > other.dollars;
-    }
-    bool operator<=(const Money& other) const {
-        if(dollars == other.dollars){
-            return cents <= other.getCents();
-        }
-        return dollars <= other.dollars;
-    }
-    bool operator>=(const Money& other) const {
-        if(dollars == other.dollars){
-            return cents >= other.getCents();
-        }
-        return dollars >= other.dollars;
-    }
+class DynamicStringArray {
 private:
-    int dollars; //A negative amount is represented as negative dollars and
-    int cents; //negative cents. Negative $4.50 is represented as -4 and -50
+    string *dynamicArray;
 
-    int dollarsPart(double amount) const;
-    int centsPart(double amount) const;
-    int round(double number) const;
+    int size;
+public:
+    DynamicStringArray() {
+        size = 0;
+        dynamicArray = nullptr;
+    }
+
+    int getSize() { return size; }
+
+    void addEntry(string newString) {
+        string *new_dynamic_array = new string[++size];
+        int i;
+        for (i = 0; i < size - 1; i++) {
+            new_dynamic_array[i] = dynamicArray[i];
+        }
+        new_dynamic_array[i] = newString;
+        dynamicArray = new_dynamic_array;
+    }
+
+    string getEntry(int i) {
+        return dynamicArray[i];
+    }
+
+    void deleteEntry(string remove_string) {
+        int i;
+        bool find = false;
+        for (i = 0; i < size; i++) {
+            if (remove_string == dynamicArray[i]) {
+                find = true;
+                break;
+            }
+        }
+        if (find) {
+            string *new_dynamic_array = new string[--size];
+            int k = 0;
+            for (int j = 0; j < size + 1; j++) {
+                if (j == i) {
+                    continue;
+                }
+                new_dynamic_array[k] = dynamicArray[j];
+                k++;
+            }
+            dynamicArray = new_dynamic_array;
+        }
+    }
 };
 
-ostream& operator <<(ostream& outputStream, const Money& amount)
-{
-    int absDollars = abs(amount.dollars);
-    int absCents = abs(amount.cents);
-    if (amount.dollars < 0 || amount.cents < 0)
-        //accounts for dollars == 0 or cents == 0
-        outputStream << "$-";
-    else
-        outputStream << '$';
-    outputStream << absDollars;
-
-    if (absCents >= 10)
-        outputStream << '.' << absCents;
-    else
-        outputStream << '.' << '0' << absCents;
-
-    return outputStream;
-}
-
-//Uses iostream and cstdlib:
-istream& operator >>(istream& inputStream, Money& amount)
-{
-    char dollarSign;
-    inputStream >> dollarSign; //hopefully
-    if (dollarSign != '$')
-    {
-        cout << "No dollar sign in Money input.\n";
-        exit(1);
-    }
-
-    double amountAsDouble;
-    inputStream >> amountAsDouble;
-    amount.dollars = amount.dollarsPart(amountAsDouble);
-    amount.cents = amount.centsPart(amountAsDouble);
-
-
-    return inputStream;
-}
-
-const Money operator +(const Money& amount1, const Money& amount2)
-{
-    int allCents1 = amount1.cents + amount1.dollars*100;
-    int allCents2 = amount2.cents + amount2.dollars*100;
-    int sumAllCents = allCents1 + allCents2;
-    int absAllCents = abs(sumAllCents); //Money can be negative.
-    int finalDollars = absAllCents/100;
-    int finalCents = absAllCents%100;
-
-    if (sumAllCents < 0)
-    {
-        finalDollars = -finalDollars;
-        finalCents = -finalCents;
-    }
-
-    return Money(finalDollars, finalCents);
-}
-
-//Uses cstdlib:
-const Money operator -(const Money& amount1, const Money& amount2)
-{
-    int allCents1 = amount1.cents + amount1.dollars*100;
-    int allCents2 = amount2.cents + amount2.dollars*100;
-    int diffAllCents = allCents1 - allCents2;
-    int absAllCents = abs(diffAllCents);
-
-    int finalDollars = absAllCents/100;
-    int finalCents = absAllCents%100;
-
-    if (diffAllCents < 0)
-    {
-        finalDollars = -finalDollars;
-        finalCents = -finalCents;
-    }
-
-    return Money(finalDollars, finalCents);
-}
-
-bool operator ==(const Money& amount1, const Money& amount2)
-{
-    return ((amount1.dollars == amount2.dollars)
-            && (amount1.cents == amount2.cents));
-}
-
-const Money operator -(const Money& amount)
-{
-    return Money(-amount.dollars, -amount.cents);
-}
-
-
-Money::Money( ): dollars(0), cents(0)
-{/*Body intentionally empty.*/}
-
-Money::Money(double amount)
-        : dollars(dollarsPart(amount)), cents(centsPart(amount))
-{/*Body intentionally empty*/}
-
-Money::Money(int theDollars)
-        : dollars(theDollars), cents(0)
-{/*Body intentionally empty*/}
-
-//Uses cstdlib:
-Money::Money(int theDollars, int theCents)
-{
-    if ((theDollars < 0 && theCents > 0) || (theDollars > 0 && theCents < 0))
-    {
-        cout << "Inconsistent money data.\n";
-        exit(1);
-    }
-    dollars = theDollars;
-    cents = theCents;
-}
-
-double Money::getAmount( ) const
-{
-    return (dollars + cents*0.01);
-}
-
-int Money::getDollars( ) const
-{
-    return dollars;
-}
-
-int Money::getCents( ) const
-{
-    return cents;
-}
-
-int Money::dollarsPart(double amount) const
-{
-    return static_cast<int>(amount);
-}
-
-int Money::centsPart(double amount) const
-{
-    double doubleCents = amount*100;
-    int intCents = (round(fabs(doubleCents)))%100;//% can misbehave on negatives
-    if (amount < 0)
-        intCents = -intCents;
-    return intCents;
-}
-
-int Money::round(double number) const
-{
-    return static_cast<int>(floor(number + 0.5));
-}
-
 int main() {
-    Money m1, m2(10, 9);
-    cout << "Enter an amount of money: ";
-    cin >> m1;
-    cout << "Your amount is " << m1 << endl;
-    cout << "My amount is " << m2 << endl;
+    FastIO;
+    DynamicStringArray names;
 
-    if (m1 == m2)
-        cout << "We have the same amounts.\n";
-    else
-        cout << "One of us is richer.\n";
+    // List of names
+    names.addEntry("Frank");
+    names.addEntry("Wiggum");
+    names.addEntry("Nahasapeemapetilon");
+    names.addEntry("Quimby");
+    names.addEntry("Flanders");
 
-    Money ourAmount = m1 + m2;
-    cout << m1 << " + " << m2
-         << " equals " << ourAmount << endl;
+    // Output list
+    cout << "List of names:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
 
-    Money diffAmount = m1 - m2;
-    cout << m1 << " - " << m2
-         << " equals " << diffAmount << endl;
+    // Add and remove some names
+    names.addEntry("Spuckler");
+    cout << "After adding a name:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
 
-    cout << m1.percent(50) << '\n';
-    cout << boolalpha << (m1 < m2) << '\n';
-    cout << boolalpha << (m1 > m2) << '\n';
-    cout << boolalpha << (m1 <= m2) << '\n';
-    cout << boolalpha << (m1 >= m2) << '\n';
+    names.deleteEntry("Nahasapeemapetilon");
+    cout << "After removing a name:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
 
+    names.deleteEntry("Skinner");
+    cout << "After removing a name that isn't on the list:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
+
+    names.addEntry("Muntz");
+    cout << "After adding another name:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
+
+    // Remove all of the names by repeatedly deleting the last one
+    while (names.getSize() > 0) {
+        names.deleteEntry(names.getEntry(names.getSize() - 1));
+    }
+
+    cout << "After removing all of the names:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
+
+    names.addEntry("Burns");
+    names.addEntry("Yap");
+    cout << "After adding a name:" << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << endl;
+
+
+    cout << "Testing copy constructor" << endl;
+    DynamicStringArray names2(names);
+    // Remove Burns from names
+    names.deleteEntry("Burns");
+    cout << "Original names: " << endl;
+    for (int i = 0; i < names.getSize(); i++)
+        cout << names.getEntry(i) << endl;
+    cout << "Copied names:" << endl;
+    for (int i = 0; i < names2.getSize(); i++)
+        cout << names2.getEntry(i) << endl;
+    cout << endl;
+
+    cout << "Testing assignment" << endl;
+    DynamicStringArray names3 = names2;
+    // Remove Burns from names2
+    names2.deleteEntry("Burns");
+    cout << "Original names: " << endl;
+    for (int i = 0; i < names2.getSize(); i++)
+        cout << names2.getEntry(i) << endl;
+    cout << "Copied names:" << endl;
+    for (int i = 0; i < names3.getSize(); i++)
+        cout << names3.getEntry(i) << endl;
+    cout << endl;
+
+    cout << "Enter a character to exit." << endl;
+    char wait;
+    cin >> wait;
     return 0;
 }
