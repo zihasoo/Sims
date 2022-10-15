@@ -1,35 +1,60 @@
 #include <iostream>
+#include <variant>
 
 using namespace std;
 
 class DynamicStringArray {
 private:
     string *dynamicArray;
-
     int size;
+
 public:
     DynamicStringArray() {
         size = 0;
         dynamicArray = nullptr;
     }
+    DynamicStringArray(const DynamicStringArray& copy) {
+        size = copy.size;
+        dynamicArray = new string[size];
+        for (int i = 0; i < size; ++i) {
+            dynamicArray[i] = copy.dynamicArray[i];
+        }
+    }
+    ~DynamicStringArray(){
+        delete[] dynamicArray;
+    }
 
-    int getSize() { return size; }
+    DynamicStringArray& operator=(const DynamicStringArray& copy){
+        if(&copy != this){
+            size = copy.size;
+            delete[] dynamicArray;
+            dynamicArray = new string[size];
+            for (int i = 0; i < size; ++i) {
+                dynamicArray[i] = copy.dynamicArray[i];
+            }
+        }
+        return *this;
+    }
 
-    void addEntry(string newString) {
-        string *new_dynamic_array = new string[++size];
+    int getSize() const noexcept { return size; }
+
+    void addEntry(const string& newString) {
+        string* new_dynamic_array = new string[++size];
         int i;
         for (i = 0; i < size - 1; i++) {
             new_dynamic_array[i] = dynamicArray[i];
         }
         new_dynamic_array[i] = newString;
+        delete[] dynamicArray;
         dynamicArray = new_dynamic_array;
     }
 
     string getEntry(int i) {
+        if(i < 0 || i > size) return nullptr;
         return dynamicArray[i];
     }
 
-    void deleteEntry(string remove_string) {
+    bool deleteEntry(const string& remove_string) {
         int i;
         bool find = false;
         for (i = 0; i < size; i++) {
@@ -42,14 +67,15 @@ public:
             string *new_dynamic_array = new string[--size];
             int k = 0;
             for (int j = 0; j < size + 1; j++) {
-                if (j == i) {
-                    continue;
-                }
+                if (j == i) continue;
                 new_dynamic_array[k] = dynamicArray[j];
                 k++;
             }
+            delete[] dynamicArray;
             dynamicArray = new_dynamic_array;
+            return true;
         }
+        else return false;
     }
 };
 
