@@ -1,0 +1,100 @@
+body {
+  background-color: #f9f9f9;
+}
+
+.container {
+  width: 350px;
+  height: 800px;
+  margin: 100px auto;
+}
+
+.container .loginBox {
+  width: 100%;
+  border: 1px solid #dfdfdf;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.container .regiBox {
+  width: 100%;
+  border: 1px solid #dfdfdf;
+  background-color: white;
+  padding: 25px 0;
+  text-align: center;
+}
+
+.container .loginBox .logo {
+  width: 200px;
+  display: block;
+  margin: 30px auto 40px;
+}
+
+.container .loginBox input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 0 10px 5px;
+  background-color: #f9f9f9;
+  margin-bottom: 12px;
+  border: 1px solid #dfdfdf;
+  border-radius: 4px;
+}
+
+.container .loginBox .inner {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.container .loginBox input:focus {
+  outline: none;
+  border: 1px solid gray;
+}
+
+.container .loginBox button {
+  background-color: #b2dffd;
+  width: 100%;
+  border: none;
+  color: white;
+  padding: 8px 0;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
+
+.container .loginBox .orContainer {
+  margin-bottom: 20px;
+}
+
+.container .loginBox .leftLine,
+.container .loginBox .rightLine {
+  display: inline-block;
+  width: 35%;
+}
+
+.container .loginBox .orContainer span {
+  width: 25%;
+  display: inline-block;
+  text-align: center;
+}
+
+.container .loginBox a {
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.container .loginBox a:last-child:hover,
+.container .regiBox a:hover {
+  text-decoration: underline;
+}
+.container .regiBox a {
+  text-decoration: none;
+}
+
+.container .loginBox .btn.active {
+  background-color: #1796f7;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
