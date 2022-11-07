@@ -11,6 +11,5 @@ int main()
 	Administrator A2;
 	A2.print();
 	A2.printCheck();
-
 	return 0;
 }

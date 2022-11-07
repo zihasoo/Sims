@@ -10,7 +10,7 @@ namespace SavitchEmployees {
         string responsibility;
         string supervisor;
     protected:
-        double annualSalary;
+        double annualSalary{};
     public:
         Administrator();
 
@@ -20,7 +20,7 @@ namespace SavitchEmployees {
 
         void setAdminData();
 
-        void print();
+        void print() const;
 
         void printCheck();
     };

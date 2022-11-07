@@ -1,5 +1,4 @@
 #include <iostream>
-#include <utility>
 #include "administrator.h"
 
 using std::cin;
@@ -36,23 +35,19 @@ namespace SavitchEmployees {
         cin >> annualSalary;
     }
 
-    void Administrator::print() {
+    void Administrator::print() const {
         // name, annualSalary, ssn, title, responsibility, supervisor
-        cout << "name: ";
-        cout << name << '\n';
-        cout << "annualSalary: ";
-        cout << annualSalary << '\n';
-        cout << "ssn: ";
-        cout << ssn << '\n';
-        cout << "title: ";
-        cout << title << '\n';
-        cout << "responsibility: ";
-        cout << responsibility << '\n';
-        cout << "supervisor: ";
-        cout << supervisor << '\n';
+        cout << "name: " << name << '\n';
+        cout << "annualSalary: " << annualSalary << '\n';
+        cout << "ssn: " << ssn << '\n';
+        cout << "title: " << title << '\n';
+        cout << "responsibility: " << responsibility << '\n';
+        cout << "supervisor: " << supervisor << '\n';
     }
 
     void Administrator::printCheck() {
-
+        double monthly_salary = annualSalary / 12;
+        setSalary(monthly_salary);
+        cout << "monthly salary: " << monthly_salary << '\n';
     }
 }
