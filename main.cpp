@@ -1,15 +1,27 @@
-#include "administrator.h"
+#include "loaded_dice.h"
 
-using namespace SavitchEmployees;
+using namespace std;
 
-int main()
+int rollTwoDice(const Dice* die1, const Dice* die2)
 {
-	Administrator A1("Tom", "12345", "Director", "Finance", "Jane", 1000.);
-	A1.print();
-	A1.printCheck();
+    return die1->rollDice() + die2->rollDice();
+}
 
-	Administrator A2;
-	A2.print();
-	A2.printCheck();
-	return 0;
+int main(){
+    Dice* dice1 = new Dice(10);
+    Dice* dice2 = new Dice(20);
+    for (int i = 0; i < 10; ++i) {
+        cout << rollTwoDice(dice1,dice2) << '\n';
+    }
+    delete dice1;
+    delete dice2;
+    cout << "Loaded Dice" << '\n';
+
+    dice1 = new LoadedDice(10);
+    dice2 = new LoadedDice(20);
+    for (int i = 0; i < 10; ++i) {
+        cout << rollTwoDice(dice1,dice2) << '\n';
+    }
+    delete dice1;
+    delete dice2;
 }
