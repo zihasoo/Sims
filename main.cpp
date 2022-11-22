@@ -1,27 +1,54 @@
-#include "loaded_dice.h"
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-int rollTwoDice(const Dice* die1, const Dice* die2)
-{
-    return die1->rollDice() + die2->rollDice();
-}
+template<typename T>
+class Set{
+    vector<T> arr;
+
+public:
+    void append(T val){
+        for(const T& x : arr)
+            if(x == val) return;
+        arr.push_back(val);
+    }
+
+    int size(){
+        return arr.size();
+    }
+
+    T* getPointer(){
+        T* temp = new T[arr.size()];
+        copy(arr.begin(),arr.end(),temp);
+        return temp;
+    }
+};
 
 int main(){
-    Dice* dice1 = new Dice(10);
-    Dice* dice2 = new Dice(20);
-    for (int i = 0; i < 10; ++i) {
-        cout << rollTwoDice(dice1,dice2) << '\n';
+    Set<int> intset;
+    intset.append(10);
+    intset.append(10);
+    intset.append(10);
+    intset.append(15);
+    intset.append(20);
+    auto itptr = intset.getPointer();
+    for (int i = 0; i < intset.size(); ++i) {
+        cout << itptr[i] << ' ';
     }
-    delete dice1;
-    delete dice2;
-    cout << "Loaded Dice" << '\n';
+    cout << '\n';
+    delete[] itptr;
 
-    dice1 = new LoadedDice(10);
-    dice2 = new LoadedDice(20);
-    for (int i = 0; i < 10; ++i) {
-        cout << rollTwoDice(dice1,dice2) << '\n';
+    Set<string> strset;
+    strset.append("hello");
+    strset.append("hello");
+    strset.append("hello");
+    strset.append("seoul");
+    strset.append("tech");
+    auto stptr = strset.getPointer();
+    for (int i = 0; i < strset.size(); ++i) {
+        cout << stptr[i] << ' ';
     }
-    delete dice1;
-    delete dice2;
+    cout << '\n';
+    delete[] stptr;
 }
