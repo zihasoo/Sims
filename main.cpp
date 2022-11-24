@@ -1,54 +1,69 @@
+#include <exception>
 #include <iostream>
-#include <vector>
 
-using namespace std;
-
-template<typename T>
-class Set{
-    vector<T> arr;
-
+class NegativeDeposit : public std::exception {
 public:
-    void append(T val){
-        for(const T& x : arr)
-            if(x == val) return;
-        arr.push_back(val);
+    const char *what() const noexcept override {
+        return "값이 0또는 음수가 될 수 없습니다.";
+    }
+};
+
+class InsufficientFunds : public std::exception {
+public:
+    const char *what() const noexcept override {
+        return "자금이 불충분합니다.";
+    }
+};
+
+
+class Account {
+private:
+    double balance;
+public:
+    Account() {
+        balance = 0;
     }
 
-    int size(){
-        return arr.size();
+    Account(double initialDeposit) {
+        balance = initialDeposit;
     }
 
-    T* getPointer(){
-        T* temp = new T[arr.size()];
-        copy(arr.begin(),arr.end(),temp);
-        return temp;
+    double getBalance() const {
+        return balance;
+    }
+
+    // returns new balance or -1 if error
+    double deposit(double amount) {
+        if (amount <= 0)
+            throw NegativeDeposit();
+
+        balance += amount;
+        return balance;
+    }
+
+    // returns new balance or -1 if invalid amount
+    double withdraw(double amount) {
+        if ((amount > balance) || (amount < 0))
+            throw InsufficientFunds();
+
+        balance -= amount;
+        return balance;
     }
 };
 
 int main(){
-    Set<int> intset;
-    intset.append(10);
-    intset.append(10);
-    intset.append(10);
-    intset.append(15);
-    intset.append(20);
-    auto itptr = intset.getPointer();
-    for (int i = 0; i < intset.size(); ++i) {
-        cout << itptr[i] << ' ';
+    auto a = Account{10};
+    try {
+        a.deposit(-10);
     }
-    cout << '\n';
-    delete[] itptr;
+    catch (NegativeDeposit& e) {
+        std::cout << "NegativeDeposit Exception: " << e.what() << '\n';
+    }
 
-    Set<string> strset;
-    strset.append("hello");
-    strset.append("hello");
-    strset.append("hello");
-    strset.append("seoul");
-    strset.append("tech");
-    auto stptr = strset.getPointer();
-    for (int i = 0; i < strset.size(); ++i) {
-        cout << stptr[i] << ' ';
+    try {
+        a.withdraw(100);
     }
-    cout << '\n';
-    delete[] stptr;
+    catch (InsufficientFunds& e) {
+        std::cout << "InsufficientFunds Exception: " << e.what() << '\n';
+    }
 }
